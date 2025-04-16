@@ -1,3 +1,4 @@
+
 function pop_up() {
     window.open("../popup/popup.html", "팝업테스트", "width=400, height=300, top=10, left=10");
     }
@@ -8,6 +9,17 @@ function over(obj) {
 function out(obj) {
         obj.src="image/logo_2.jpg";
         }
+
+/*
+const over = (obj) => {
+        obj.src = "image/logo.svg";
+        };
+
+const search_message = () => {
+        const c = '검색을 수행합니다';
+        alert(c);
+        };
+*/
 
 function show_clock(){
         let currentDate= new Date(); // 현재시스템날짜객체생성
