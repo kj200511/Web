@@ -1,5 +1,5 @@
 var close_time; // 시간 정보
-var close_time2 = 10; // 10초 설정
+var close_time2 = 50; // 10초 설정
 clearTimeout(close_time); // 재호출 정지
 close_time= setTimeout("close_window()", 10000);
 // 1/1000 초 지정, 바로 시작
