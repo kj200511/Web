@@ -1,7 +1,10 @@
+<<<<<<< HEAD
 import { session_set, session_get, session_check } from './session.js';
 import { encrypt_text, decrypt_text } from './crypto.js';
 import { generateJWT, checkAuth } from './jwt_token.js';
 
+=======
+>>>>>>> 9e0704d4d20aa8e5111177ba028e95ed3b238ee2
 function init(){ // 로그인 폼에 쿠키에서 가져온 아이디 입력
     const emailInput = document.getElementById('typeEmailX');
     const idsave_check = document.getElementById('idSaveCheck');
@@ -37,11 +40,19 @@ const check_xss = (input) => {
     return sanitizedInput;
     };
 
+<<<<<<< HEAD
 function setCookie(name, value, expiredays) {
     var date = new Date();
     date.setDate(date.getDate() + expiredays);
     document.cookie = escape(name) + "=" + escape(value) + "; expires=" + date.toUTCString() + "; path=/" + ";SameSite=None; Secure";
 }
+=======
+    function setCookie(name, value, expiredays) {
+        var date = new Date();
+        date.setDate(date.getDate() + expiredays);
+        document.cookie = escape(name) + "=" + escape(value) + "; expires=" + date.toUTCString() + "; path=/" + ";SameSite=None; Secure";
+    }
+>>>>>>> 9e0704d4d20aa8e5111177ba028e95ed3b238ee2
 
     function getCookie(name) {
         var cookie = document.cookie;
@@ -132,6 +143,17 @@ const check_input = () => {
     loginForm.submit();
 };
 
+<<<<<<< HEAD
 document.addEventListener('DOMContentLoaded', () => {
     init();
     });
+=======
+document.addEventListener("DOMContentLoaded", function () {
+    const loginBtn = document.getElementById("login_btn");
+    if (loginBtn) {
+        loginBtn.addEventListener("click", check_input);
+    } else {
+        console.error("login_btn 요소를 찾을 수 없습니다.");
+    }
+});
+>>>>>>> 9e0704d4d20aa8e5111177ba028e95ed3b238ee2
