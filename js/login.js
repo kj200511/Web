@@ -60,7 +60,6 @@ function setCookie(name, value, expiredays) {
 
 const check_input = () => {
     const loginForm = document.getElementById('login_form');
-    const loginBtn = document.getElementById('login_btn');
     const emailInput = document.getElementById('typeEmailX');
     const passwordInput = document.getElementById('typePasswordX');
     const idsave_check = document.getElementById('idSaveCheck');
@@ -76,9 +75,6 @@ const check_input = () => {
     const passwordValue = passwordInput.value.trim();
 
     const sanitizedPassword = check_xss(passwordValue);
-    // check_xss 함수로 비밀번호 Sanitize
-    const sanitizedEmail = check_xss(emailValue);
-    // check_xss 함수로 비밀번호 Sanitize
 
     if (emailValue === '') {
     alert('이메일을 입력하세요.');
