@@ -27,11 +27,22 @@ export function encrypt_text(password){
     console.log(eb);
 }
 
+
 export function decrypt_text(){
     const k = "key"; // 서버의 키
     const rk = k.padEnd(32, " "); // AES256은 key 길이가 32
     const eb = session_get();
+
+    if (!eb) {
+        console.warn("복호화할 데이터가 없습니다.");
+        return null;  // 또는 빈 문자열 반환 가능
+    }
+
     const b = decodeByAES256(rk, eb); // 실제 복호화
     console.log(b);
+    return b;
 }
+
+
+
 

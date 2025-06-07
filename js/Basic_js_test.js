@@ -1,21 +1,19 @@
-var jb = 'hi'; // 변수 선언 후 주석 가능(한줄 주석)
-var a = 1;
-var b;
-b = 5;
+var close_time;          // 시간 정보
+var close_time2 = 50;    // 50초 설정
 
-/*
-여러 줄 주석 : 여러 줄에 걸쳐 주석을 처리합니다.
-*/
-if (true) {
-    let c = 'let 접근';
-    var c_1 = 'var 접근';
-    }
-    //console.log(c); // Error?
-    console.log(c_1);
-    let d = 5;
-    //let d = '값 재할당'; // Error?
-    console.log(d);
-    const e = '상수1 접근';
-    //e = 5;
-    //const f // Error?
-    console.log(e);
+clearTimeout(close_time);       // 재호출 정지
+close_time = setTimeout(close_window, 10000);  // 10초 후 close_window 함수 호출
+
+// 1/1000 초 지정, 바로 시작
+show_time();  // 실시간 시간 보여주기
+
+function show_time() {
+  let divClock = document.getElementById('Time');
+  divClock.innerText = close_time2;  // 남은 시간 표시
+  close_time2--;                     // 1초씩 감소
+  setTimeout(show_time, 1000);      // 1초마다 갱신
+}
+
+function close_window() {   // 윈도우 닫기 함수 정의
+  window.close();
+}

@@ -1,76 +1,102 @@
-import { encrypt_text, decrypt_text } from './crypto.js';
+import { encrypt_text, decrypt_text } from './crypto.js';        // CryptoJS AES-CBC
+import { encrypt_text_gcm, decrypt_text_gcm } from './crypto2.js'; // Web Crypto API AES-GCM
 
-// export function session_set() { //세션 저장
-//    let session_id = document.querySelector("#typeEmailX");
-//    if (sessionStorage) {
-//        sessionStorage.setItem("Session_Storage_test", session_id.value);
-//    } else {
-//        alert("로컬 스토리지 지원 x");
-//    }
-// }
+export async function session_set() {
+  const id = document.querySelector("#typeEmailX");
+  const pass = document.querySelector("#typePasswordX");
+  // if (!id || !pass) {
+  //   alert("아이디 또는 비밀번호 입력란을 찾을 수 없습니다.");
+  //   return;
+  // }
 
-// export function session_set() { //세션 저장
-//     let session_id = document.querySelector("#typeEmailX"); // DOM 트리에서 ID 검색
-//     let session_pass = document.querySelector("#typePasswordX"); // DOM 트리에서 pass 검색
-//     if (sessionStorage) {
-//         let en_text = encrypt_text(session_pass.value);
-//         sessionStorage.setItem("Session_Storage_id", session_id.value);
-//         sessionStorage.setItem("Session_Storage_pass", en_text);
-//     } else {
-//         alert("로컬 스토리지 지원 x");
-//     }
-// }
+  const random = new Date();
+  const obj = {
+    id: id.value,
+    otp: random.toISOString()
+  };
 
-export function session_set(){ //세션 저장(객체)
-    let id = document.querySelector("#typeEmailX");
-    let password = document.querySelector("#typePasswordX");
-    let random = new Date(); // 랜덤 타임스탬프
-    const obj = { // 객체 선언
-    id : id.value,
-    otp : random
-    }
-    // 다음 페이지 계속 작성하기
-    if (sessionStorage) {
-        const objString = JSON.stringify(obj); // 객체 -> JSON 문자열 변환
-        let en_text = encrypt_text(objString); // 암호화
-        sessionStorage.setItem("Session_Storage_id", id.value);
-        sessionStorage.setItem("Session_Storage_object", objString);
-        sessionStorage.setItem("Session_Storage_pass", en_text);
-    } else {
-        alert("세션 스토리지 지원 x");
-    }
+  if (!sessionStorage) {
+    alert("세션 스토리지를 지원하지 않습니다.");
+    return;
+  }
+
+  try {
+    // 1) 기존 CryptoJS AES-CBC 방식 암호화
+    const objString = JSON.stringify(obj);
+    const encryptedPass = encrypt_text(pass.value); // 비밀번호 암호화
+
+    sessionStorage.setItem("Session_Storage_id", id.value);
+    sessionStorage.setItem("Session_Storage_pass", encryptedPass);
+    sessionStorage.setItem("Session_Storage_object", objString);
+
+    // 2) Web Crypto API AES-GCM 방식 암호화 (객체 전체 암호화)
+    const encryptedGcm = await encrypt_text_gcm(objString);
+    sessionStorage.setItem("Session_Storage_pass2", encryptedGcm);
+
+    console.log("세션 저장 완료 - AES-CBC, AES-GCM 모두 저장됨");
+  } catch (err) {
+    console.error("세션 저장 중 오류:", err);
+  }
 }
 
-export function session_set2(obj){ //세션 저장(객체)
-    if (sessionStorage) {
-        const objString = JSON.stringify(obj); // 객체 -> JSON 문자열 변환
-        //let en_text = encrypt_text(objString); // 암호화
-        sessionStorage.setItem("Session_Storage_join",objString);
-    } else {
-        alert("세션 스토리지 지원 x");
-    }
-}
-export function session_get() { //세션 읽기
-    if (sessionStorage) {
-        return sessionStorage.getItem("Session_Storage_pass");
-    } else {
-        alert("세션 스토리지 지원 x");
-    }
+export function session_set2(obj) { // 세션 저장(객체)
+  if (sessionStorage) {
+    const objString = JSON.stringify(obj); // 객체 -> JSON 문자열 변환
+    // let en_text = encrypt_text(objString); // 암호화
+    sessionStorage.setItem("Session_Storage_join", objString);
+  } else {
+    alert("세션 스토리지 지원 x");
+  }
 }
 
-export function session_check() { //세션 검사
-    if (sessionStorage.getItem("Session_Storage_id")) {
-        alert("이미 로그인 되었습니다.");
-        location.href='../login/index_login.html'; // 로그인된 페이지로 이동
-    }
+export function session_get() { // 세션 읽기
+  if (sessionStorage) {
+    return sessionStorage.getItem("Session_Storage_pass");
+  } else {
+    alert("세션 스토리지 지원 x");
+  }
 }
 
-function session_del() {//세션 삭제
-    if (sessionStorage) {
-        sessionStorage.removeItem("Session_Storage_id");
-        alert('로그아웃 버튼 클릭 확인 : 세션 스토리지를 삭제합니다.');
-    } else {
-        alert('세션 스토리지 지원 x');
-        }
-    }
-    
+export async function session_get_decrypted() {
+  if (!sessionStorage) {
+    alert("세션 스토리지를 지원하지 않습니다.");
+    return null;
+  }
+
+  const encryptedData = sessionStorage.getItem("Session_Storage_pass2");
+  if (!encryptedData) {
+    console.warn("복호화할 데이터가 없습니다.");
+    return null;
+  }
+
+  try {
+    const decrypted = await decrypt_text_gcm(encryptedData);
+    console.log("복호화된 데이터:", decrypted);
+    return decrypted;
+  } catch (err) {
+    console.error("복호화 실패:", err);
+    return null;
+  }
+}
+
+export function session_check() {
+  const path = window.location.pathname;
+  const isLoginPage = path.includes('index.html') || path.includes('login.html');
+  if (!isLoginPage && sessionStorage.getItem("Session_Storage_id")) {
+    alert("이미 로그인 되었습니다.");
+    location.href = '../login/index_login.html';
+  }
+}
+
+export function session_del() {
+  if (sessionStorage) {
+    sessionStorage.removeItem("Session_Storage_id");
+    sessionStorage.removeItem("Session_Storage_pass");
+    sessionStorage.removeItem("Session_Storage_object");
+    sessionStorage.clear(); // 모든 세션 데이터 완전 삭제
+    localStorage.removeItem("jwt_token"); // JWT 토큰 삭제
+    console.log("세션과 토큰을 모두 삭제했습니다.");
+  } else {
+    alert("세션 스토리지 지원 x");
+  }
+}

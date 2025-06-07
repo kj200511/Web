@@ -11,6 +11,7 @@
         <script defer src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js" integrity="sha512-a+SUDuwNzXDvz4XrIcXHuCf089/iJAoN4lmrXJg18XnduKK6YlDHNRalv4yd1N40OKI80tFidF+rqTFKGPoWFQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.2.5/purify.min.js" integrity="sha512-/CUtA84sWWqWEBejNrrtWa7Yc4cth3Ome2ymvCKOo9YcZ4sh98tndUy4LutE2xGcAgD4fyz16y+gSyJdGCB5ww==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
         <script defer type="module" src="../js/login.js"></script>
+        <script defer type="module" src="../js/crypto2.js"></script>
         <!-- <script defer type="text/javascript" src="../js/session.js"></script>
         <script defer type="text/javascript" src="../js/crypto.js"></script>
         <script defer type="text/javascript" src="../js/jwt_token.js"></script> -->
@@ -34,7 +35,7 @@
                         
                         <h2 class="fw-bold mb-2 text-uppercase">로그인 화면</h2>
                         <p class="text-white-50 mb-5">Please enter your login and password!</p>
-        
+                        <div id="fail_message" style="color:red; margin-top: 10px;"></div>
                         <div data-mdb-input-init class="form-outline form-white mb-4">
                         <input type="email" id="typeEmailX" name="id" class="form-control form-control-lg" />
                         <label class="form-label" for="typeEmailX">Email</label>
